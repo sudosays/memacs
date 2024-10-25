@@ -1,6 +1,26 @@
 ;; -*- coding: utf-8 -*-
 ;; Emacs init file
 
+;; PACKAGES
+(setq package-archives
+   '(("gnu" . "https://elpa.gnu.org/packages/")
+     ("nongnu" . "https://elpa.nongnu.org/nongnu/")
+     ("melpa-stable" . "https://stable.melpa.org/packages/")))
+
+(require 'package)
+(package-initialize)
+
+(setq my-pkgs
+      '(evil
+	auctex
+	vertico
+	magit))
+
+(dolist (pkg my-pkgs)
+  (unless (package-installed-p pkg)
+    (package-install pkg)))
+
+
 ;; EDITOR/GUI
 
 (setq visible-bell 1) ;; disable the bell sounding like with C-g
@@ -55,6 +75,8 @@
 
 ;; KEYMAPS
 
+(require 'evil)
+
 (keymap-global-set "C-x ;" 'evil-local-mode)
 (keymap-global-set "C-x $" 'open-or-switch-to-term)
 
@@ -68,48 +90,21 @@
 
 (add-hook 'org-mode-hook 'org-indent-mode)
 
-;; PACKAGES
-
-(require 'package)
-;; Download Evil if not installed
-(unless (package-installed-p 'evil)
-  (add-to-list 'package-archives
-    '("melpa" . "https://melpa.org/packages/"))
-  (package-initialize)
-  (package-refresh-contents)
-  (package-install 'evil))
-
-(unless (package-installed-p 'auctex)
-  (add-to-list 'package-archives
-    '("melpa-stable" . "https://stable.melpa.org/packages/"))
-  (package-initialize)
-  (package-refresh-contents)
-  (package-install 'auctex))
-
-;; Evil
-(require 'evil)
-
 ;; AUCTEX setup
 
 (require 'auctex)
+
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq-default TeX-master nil)
 
 (setq reftex-plug-into-AUCTeX t) ;; RefTeX integration
-
-;; DO NOT TOUCH
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files nil)
- '(package-archives
-   '(("gnu" . "https://elpa.gnu.org/packages/")
-     ("nongnu" . "https://elpa.nongnu.org/nongnu/")
-     ("melpa-stable" . "https://stable.melpa.org/packages/")))
- '(package-selected-packages '(olivetti auctex corfu vertico evil)))
+ '(package-selected-packages '(magit vertico evil auctex)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
