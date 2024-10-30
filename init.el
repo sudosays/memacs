@@ -80,6 +80,17 @@
 (keymap-global-set "C-x ;" 'evil-local-mode)
 (keymap-global-set "C-x $" 'open-or-switch-to-term)
 
+(evil-set-leader 'normal (kbd "SPC"))
+(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>.") 'project-find-file)
+(evil-define-key 'normal 'global (kbd "<leader>bk") 'kill-this-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>bn") 'next-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>bp") 'previous-buffer)
+
+(evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
+(evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
+
+
 ;; MODE HOOKS
 
 (add-hook 'prog-mode-hook 'evil-local-mode)
@@ -99,6 +110,10 @@
 (setq-default TeX-master nil)
 
 (setq reftex-plug-into-AUCTeX t) ;; RefTeX integration
+
+(require 'vertico)
+(vertico-mode)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
