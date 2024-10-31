@@ -12,12 +12,13 @@
 
 (setq my-pkgs
       '(evil
-	auctex
 	vertico
-	magit))
+	ivy
+	auctex
+	magit)) 
 
 (dolist (pkg my-pkgs)
-  (unless (package-installed-p pkg)
+(unless (package-installed-p pkg)
     (package-install pkg)))
 
 
@@ -81,15 +82,26 @@
 (keymap-global-set "C-x $" 'open-or-switch-to-term)
 
 (evil-set-leader 'normal (kbd "SPC"))
+
+;; SAAVING/LOADING
 (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>.") 'project-find-file)
+(evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
+(evil-define-key 'normal 'global (kbd "<leader>.") 'find-file)
+
+;; BUFFERS
 (evil-define-key 'normal 'global (kbd "<leader>bk") 'kill-this-buffer)
 (evil-define-key 'normal 'global (kbd "<leader>bn") 'next-buffer)
 (evil-define-key 'normal 'global (kbd "<leader>bp") 'previous-buffer)
+(evil-define-key 'normal 'global (kbd "<leader>bb") 'switch-to-buffer)
 
+;; WINDOWS
 (evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
 (evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
+(evil-define-key 'normal 'global (kbd "<leader>wD") 'delete-other-windows)
+(evil-define-key 'normal 'global (kbd "<leader>wr") 'window-swap-states)
 
+;; PROJECTS
+(evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
 
 ;; MODE HOOKS
 
@@ -111,15 +123,24 @@
 
 (setq reftex-plug-into-AUCTeX t) ;; RefTeX integration
 
+
+;; VERTICO SETUP
+
 (require 'vertico)
+;; Enable vertico to keep opening minibuffers
+(setq enable-recursive-minibuffers t)
 (vertico-mode)
+
+;; IVY SETUP -- FIXME: Needed?
+(require 'ivy)
+(ivy-mode)
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(magit vertico evil auctex)))
+ '(package-selected-packages '(ivy magit vertico evil auctex)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
