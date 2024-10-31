@@ -24,16 +24,15 @@
 
 ;; EDITOR/GUI
 
-(setq visible-bell 1) ;; disable the bell sounding like with C-g
-(setq inhibit-startup-screen t)
+;; Moved to early init
+;; (setq visible-bell 1) ;; disable the bell sounding like with C-g
+;; (setq inhibit-startup-screen t)
+;; (set-scroll-bar-mode nil)
+;; (tool-bar-mode -1)
+;; (menu-bar-mode -1)
 
 ;; Font size setting
 (set-face-attribute 'default nil :height 143)
-
-;; Editor UI Elements
-(set-scroll-bar-mode nil)
-(tool-bar-mode -1)
-(menu-bar-mode -1)
 
 ;; Pretty good default theme
 (load-theme 'wombat)
@@ -44,8 +43,11 @@
 ;; EMACS BEHAVIOUR
 
 ;; Stop Emacs from littering <filename>~ backup files everywhere
-(setq backup-directory-alist
-      (list (concat (file-name-parent-directory user-init-file) ".trash")))
+(setq make-backup-files nil)
+(setq backup-inhibited nil) ; Not sure if needed, given `make-backup-files'
+(setq create-lockfiles nil)
+;; (setq backup-directory-alist
+;;       (list (concat (file-name-parent-directory user-init-file) ".trash")))
 
 ;; FUNCTIONS
 
@@ -74,66 +76,68 @@
     (switch-to-buffer "*terminal*")
   (term-with-shell)))
 
-;; KEYMAPS
-
-(require 'evil)
-
-(keymap-global-set "C-x ;" 'evil-local-mode)
-(keymap-global-set "C-x $" 'open-or-switch-to-term)
-
-(evil-set-leader 'normal (kbd "SPC"))
-
-;; SAAVING/LOADING
-(evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
-(evil-define-key 'normal 'global (kbd "<leader>.") 'find-file)
-
-;; BUFFERS
-(evil-define-key 'normal 'global (kbd "<leader>bk") 'kill-this-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>bn") 'next-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>bp") 'previous-buffer)
-(evil-define-key 'normal 'global (kbd "<leader>bb") 'switch-to-buffer)
-
-;; WINDOWS
-(evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
-(evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
-(evil-define-key 'normal 'global (kbd "<leader>wD") 'delete-other-windows)
-(evil-define-key 'normal 'global (kbd "<leader>wr") 'window-swap-states)
-
-;; PROJECTS
-(evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
-
 ;; MODE HOOKS
 
-(add-hook 'prog-mode-hook 'evil-local-mode)
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-
 (add-hook 'text-mode-hook 'auto-fill-mode)
-(add-hook 'text-mode-hook 'evil-local-mode)
-
 (add-hook 'org-mode-hook 'org-indent-mode)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+
+;; EVIL SETUP
+
+(use-package evil
+  :config
+    (keymap-global-set "C-x ;" 'evil-local-mode)
+    (keymap-global-set "C-x $" 'open-or-switch-to-term)
+
+    (evil-set-leader 'normal (kbd "SPC"))
+
+    ;; SAAVING/LOADING
+    (evil-define-key 'normal 'global (kbd "<leader>fs") 'save-buffer)
+    (evil-define-key 'normal 'global (kbd "<leader>pf") 'project-find-file)
+    (evil-define-key 'normal 'global (kbd "<leader>.") 'find-file)
+
+    ;; BUFFERS
+    (evil-define-key 'normal 'global (kbd "<leader>bk") 'kill-this-buffer)
+    (evil-define-key 'normal 'global (kbd "<leader>bn") 'next-buffer)
+    (evil-define-key 'normal 'global (kbd "<leader>bp") 'previous-buffer)
+    (evil-define-key 'normal 'global (kbd "<leader>bb") 'switch-to-buffer)
+
+    ;; WINDOWS
+    (evil-define-key 'normal 'global (kbd "<leader>ww") 'other-window)
+    (evil-define-key 'normal 'global (kbd "<leader>wd") 'delete-window)
+    (evil-define-key 'normal 'global (kbd "<leader>wD") 'delete-other-windows)
+    (evil-define-key 'normal 'global (kbd "<leader>wr") 'window-swap-states)
+
+    ;; PROJECTS
+    (evil-define-key 'normal 'global (kbd "<leader>pp") 'project-switch-project)
+
+    (add-hook 'prog-mode-hook 'evil-local-mode)
+    (add-hook 'text-mode-hook 'evil-local-mode))
 
 ;; AUCTEX setup
 
-(require 'auctex)
-
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-
-(setq reftex-plug-into-AUCTeX t) ;; RefTeX integration
+(use-package auctex
+    :defer t
+    :config
+    (setq TeX-auto-save t)
+    (setq TeX-parse-self t)
+    (setq-default TeX-master nil)
+    (setq reftex-plug-into-AUCTeX t))
 
 
 ;; VERTICO SETUP
 
-(require 'vertico)
-;; Enable vertico to keep opening minibuffers
-(setq enable-recursive-minibuffers t)
-(vertico-mode)
+(use-package vertico
+    ;; Enable vertico to keep opening minibuffers
+  :config
+    (setq enable-recursive-minibuffers t)
+    (vertico-mode))
 
 ;; IVY SETUP -- FIXME: Needed?
-(require 'ivy)
-(ivy-mode)
+(use-package ivy
+  :config
+    (ivy-mode))
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
